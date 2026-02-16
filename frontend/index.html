@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>RMOS Surface - Customer</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 1rem; }
+    .item { border: 1px solid #ddd; padding: 0.5rem; margin: 0.5rem 0; display:flex; justify-content:space-between; }
+    button { padding: 0.5rem 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Menu</h1>
+  <div id="menu"></div>
+  <h2>Pending Order</h2>
+  <div id="orderItems"></div>
+  <button id="placeOrder">Place Order</button>
+
+  <script src="app.js"></script>
+  <script>
+    // Simple tap-based add/remove
+    let order = { items: [] };
+    async function loadMenu(){
+      const res = await fetch('/api/menu');
+      const items = await res.json();
+      const menu = document.getElementById('menu');
+      menu.innerHTML = '';
+      items.forEach(it => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<div><strong>${it.name}</strong><div>${it.description || ''}</div></div><div><button data-id="${it.id}">Add</button></div>`;
+        menu.appendChild(div);
+      });
+      menu.querySelectorAll('button').forEach(b => b.addEventListener('click', (e) => {
+        const id = parseInt(e.target.dataset.id);
+        const existing = order.items.find(x => x.item_id === id);
+        if (existing) existing.qty += 1; else order.items.push({ item_id: id, qty: 1 });
+        renderOrder();
+      }));
+    }
+    function renderOrder(){
+      const el = document.getElementById('orderItems');
+      el.innerHTML = order.items.map(i => `Item ${i.item_id} x ${i.qty}`).join('<br>') || 'Empty';
+    }
+    document.getElementById('placeOrder').addEventListener('click', async () => {
+      if (!order.items.length) return alert('Add items first');
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ table_number: "T1", items: order.items })
+      });
+      if (res.ok) {
+        alert('Order placed');
+        order.items = [];
+        renderOrder();
+      } else {
+        alert('Failed to place order');
+      }
+    });
+    loadMenu();
+  </script>
+</body>
+</html>
