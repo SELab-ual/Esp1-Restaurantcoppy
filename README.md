@@ -27,3 +27,11 @@ SELECT * FROM audit;
 - Authentication is a simple stub; replace with JWT/session in Sprint 2.
 - Secrets must be rotated and stored securely (Docker secrets or vault) before production.
 - Add TLS termination and production process manager (gunicorn) in next sprint.
+
+
+
+## Nota de Isa
+
+He tenido que ajustar las librerías en funcion del error de acceso a librerías
+
+Hay un nuevo requirements.txt
