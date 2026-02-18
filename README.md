@@ -30,8 +30,36 @@ SELECT * FROM audit;
 
 
 
-## Nota de Isa
+#
+### NOTAR ISA ajuste en requirements.txt
 
-He tenido que ajustar las librerías en funcion del error de acceso a librerías
+el original
+```
+fastapi==0.95.2
+uvicorn[standard]==0.22.0
+SQLAlchemy==2.0.19
+psycopg2-binary==2.9.7
+python-dotenv==1.0.0
+passlib[bcrypt]==1.7.4
+itsdangerous==2.1.2
+```
 
-Hay un nuevo requirements.txt
+Hubo que cambiar librerías añadiendo -- cambia dependencias
+ 
+```
+fastapi==0.95.2
+uvicorn[standard]==0.22.0
+SQLAlchemy==2.0.19
+psycopg2-binary==2.9.7
+python-dotenv==1.0.0
+itsdangerous==2.1.2
+
+
+bcrypt==3.1.7
+passlib==1.7.4
+```
+
+
+http://localhost/
+
+http://localhost/tablet.html.
